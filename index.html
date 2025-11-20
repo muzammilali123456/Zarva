@@ -3,395 +3,771 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Clothing Store</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <title>Zarva - Modern Clothing | Quality Fashion for Every Occasion</title>
+    <meta name="description" content="Shop quality fashion for every occasion. Modern clothing for Men, Women & Kids. Order via WhatsApp with cash on delivery.">
+    
+   
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+ 
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- City Selection Overlay -->
-    <div id="citySelector" class="city-overlay" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%), url('https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=1920&h=1080&fit=crop'); background-size: cover; background-position: center;">
-        <div class="city-container">
-            <div class="city-overlay-content">
-                <h1 class="city-title">Select Your City</h1>
-                <p class="city-subtitle">Choose your location to start shopping</p>
-                <div class="city-list">
-                    <button class="city-option" data-city="Karachi">Karachi</button>
-                    <button class="city-option" data-city="Lahore">Lahore</button>
-                    <button class="city-option" data-city="Islamabad">Islamabad</button>
-                    <button class="city-option" data-city="Rawalpindi">Rawalpindi</button>
+    
+    <header class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+        <div class="container">
+            
+            <a class="navbar-brand fw-bold fs-2" href="#">
+                <i class="fas fa-store text-primary me-2"></i>Zarva
+            </a>
+            
+            <!-- Mobile Toggle Button -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <!-- Navigation Menu -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" onclick="filterProducts('all'); return false;">All</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="filterProducts('men'); return false;">Men</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="filterProducts('women'); return false;">Women</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="filterProducts('kids'); return false;">Kids</a>
+                    </li>
+                </ul>
+                
+                <!-- Right Side -->
+                <div class="d-flex align-items-center">
+                    <!-- Cart Button -->
+                    <button class="btn btn-outline-primary me-3 position-relative" onclick="toggleCart(); return false;">
+                        <i class="fas fa-shopping-cart"></i>
+                        Cart
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cart-count">0</span>
+                    </button>
+                    
+                    <!-- City Selector -->
+                    <select class="form-select me-3" id="citySelector" onchange="saveCity(); return false;" style="width: 150px;">
+                        <option value="">Select City</option>
+                        <option value="Karachi">Karachi</option>
+                        <option value="Lahore">Lahore</option>
+                        <option value="Islamabad">Islamabad</option>
+                        <option value="Rawalpindi">Rawalpindi</option>
+                        <option value="Faisalabad">Faisalabad</option>
+                    </select>
+                    
+                    <!-- WhatsApp Contact Button -->
+                    <a href="https://wa.me/923001234567" target="_blank" class="btn btn-success">
+                        <i class="fab fa-whatsapp me-1"></i>Contact Us
+                    </a>
                 </div>
             </div>
         </div>
+    </header>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar" style="right: -400px;">
+        <div class="cart-header">
+            <h5><i class="fas fa-shopping-cart me-2"></i>Shopping Cart</h5>
+            <button class="btn-close" onclick="toggleCart(); return false;"></button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <div class="text-center text-muted p-3" id="emptyCart">
+                <i class="fas fa-shopping-cart fa-3x mb-3"></i>
+                <p>Your cart is empty</p>
+                <small>Add products to your cart to start shopping</small>
+            </div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Total Items:</span>
+                    <span id="cart-total-items">0</span>
+                </div>
+                <div class="d-flex justify-content-between mb-3">
+                    <strong>Total Price:</strong>
+                    <strong id="cart-total-price">PKR 0</strong>
+                </div>
+            </div>
+            <button class="btn btn-success w-100" id="bulkOrderBtn" onclick="orderAllOnWhatsApp(); return false;" disabled>
+                <i class="fab fa-whatsapp me-1"></i>Order All on WhatsApp
+            </button>
+        </div>
     </div>
 
-    <!-- Main Store -->
-    <div id="mainStore" class="main-content" style="opacity: 0; pointer-events: none;">
-        <!-- Navigation Header -->
-        <nav class="main-nav">
-            <div class="container">
-                <div class="nav-content">
-                    <!-- Logo -->
-                    <div class="nav-logo">
-                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="20" cy="20" r="20" fill="#087F8C"/>
-                            <path d="M12 15L20 12L28 15V25C28 26.1046 27.1046 27 26 27H14C12.8954 27 12 26.1046 12 25V15Z" stroke="white" stroke-width="2" fill="none"/>
-                            <path d="M16 20L19 23L24 18" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        <span class="logo-text">Modern Clothing</span>
-                    </div>
+    <!-- Cart Overlay -->
+    <div class="cart-overlay" id="cartOverlay" style="opacity: 0; visibility: hidden;"></div>
 
-                    <!-- Navigation Menu -->
-                    <div class="nav-menu">
-                        <button class="nav-item active" data-category="all">All Products</button>
-                        <button class="nav-item" data-category="men">Men</button>
-                        <button class="nav-item" data-category="women">Women</button>
-                        <button class="nav-item" data-category="kids">Kids</button>
-                    </div>
-
-                    <!-- Social Links -->
-                    <div class="nav-social">
-                        <a href="#" class="social-icon" aria-label="Facebook">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M18 2H15C13.6739 2 12.4021 2.52678 11.4645 3.46447C10.5268 4.40215 10 5.67392 10 7V10H7V14H10V22H14V14H17L18 10H14V7C14 6.73478 14.1054 6.48043 14.2929 6.29289C14.4804 6.10536 14.7348 6 15 6H18V2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </a>
-                        <a href="#" class="social-icon" aria-label="Instagram">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" stroke="currentColor" stroke-width="2"/>
-                                <path d="M16 11.37C16.24 10.56 16.09 9.61 15.55 8.85C15.01 8.09 14.18 7.64 13.25 7.56C12.32 7.48 11.41 7.69 10.66 8.15C9.91 8.61 9.39 9.28 9.19 10.04C8.99 10.8 9.05 11.61 9.36 12.33C9.67 13.05 10.21 13.64 10.91 14.01C11.61 14.38 12.42 14.49 13.19 14.31C13.96 14.13 14.64 13.68 15.1 13.05C15.56 12.42 15.76 11.66 15.68 10.91" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
-                        </a>
-                        <a href="#" class="social-icon" aria-label="Twitter">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M23 3C22.0424 3.67548 20.9821 4.19211 19.86 4.53C19.2577 3.83751 18.4573 3.34669 17.567 3.12393C16.6767 2.90116 15.7395 2.95718 14.8821 3.28445C14.0247 3.61171 13.2884 4.19439 12.773 4.95372C12.2575 5.71305 11.9877 6.61553 12 7.53V8.53C10.2426 8.57557 8.50127 8.18581 6.93101 7.39624C5.36074 6.60667 4.01032 5.43666 3 4C3 4 -1 13 8 17C5.94053 18.398 3.48716 19.099 1 19C10 24 21 19 21 7.5C20.9991 7.22145 20.9723 6.94359 20.92 6.67C21.9406 5.66349 22.6608 4.39271 23 3V3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </a>
-                    </div>
-
-                    <!-- Mobile Menu Toggle -->
-                    <button class="mobile-menu-toggle" aria-label="Toggle menu">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </button>
-                </div>
-            </div>
-        </nav>
-
-        <!-- Store Header -->
-        <header class="store-header">
-            <div class="container">
-                <div class="store-header-content">
-                    <div class="store-info">
-                        <h1 class="store-title">Modern Clothing</h1>
-                        <p class="store-subtitle">Quality fashion for every occasion</p>
-                    </div>
-                    <div class="city-badge">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M21 10C21 17 12 23 12 23S3 17 3 10C3 5.02944 7.02944 1 12 1C16.9706 1 21 5.02944 21 10Z" stroke="currentColor" stroke-width="2"/>
-                            <circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="2"/>
-                        </svg>
-                        <span id="selectedCityDisplay">Select City</span>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <main class="store-main">
-            <div class="container">
-                <!-- Category Filter -->
-                <div class="category-filters">
-                    <button class="filter-btn active" data-category="all">All Products</button>
-                    <button class="filter-btn" data-category="men">Men</button>
-                    <button class="filter-btn" data-category="women">Women</button>
-                    <button class="filter-btn" data-category="kids">Kids</button>
-                </div>
-
-                <div class="products-grid">
-                    <!-- Men's Products -->
-                    <!-- Product 1 - Men's White Shirt -->
-                    <div class="product-card" data-product="0" data-category="men">
-                        <div class="product-image">
-                            <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=600&fit=crop" alt="Classic White Shirt">
-                            <div class="category-badge">Men</div>
-                        </div>
-                        <div class="product-info">
-                            <h3 class="product-title">Classic White Shirt</h3>
-                            <p class="product-description">Premium cotton blend, perfect for formal occasions and everyday wear</p>
-                            <p class="product-price">PKR 2,500</p>
-                        </div>
-                    </div>
-
-                    <!-- Product 2 - Men's Denim Jacket -->
-                    <div class="product-card" data-product="1" data-category="men">
-                        <div class="product-image">
-                            <img src="https://images.unsplash.com/photo-1544966503-7cc5ac882d5a?w=400&h=600&fit=crop" alt="Denim Jacket">
-                            <div class="category-badge">Men</div>
-                        </div>
-                        <div class="product-info">
-                            <h3 class="product-title">Denim Jacket</h3>
-                            <p class="product-description">Classic fit denim jacket with vintage wash finish</p>
-                            <p class="product-price">PKR 4,200</p>
-                        </div>
-                    </div>
-
-                    <!-- Product 3 - Men's Black Trousers -->
-                    <div class="product-card" data-product="2" data-category="men">
-                        <div class="product-image">
-                            <img src="https://images.unsplash.com/photo-1578587018452-8927c328b87d?w=400&h=600&fit=crop" alt="Black Trousers">
-                            <div class="category-badge">Men</div>
-                        </div>
-                        <div class="product-info">
-                            <h3 class="product-title">Black Trousers</h3>
-                            <p class="product-description">Slim fit formal trousers in premium polyester blend</p>
-                            <p class="product-price">PKR 3,800</p>
-                        </div>
-                    </div>
-
-                    <!-- Product 4 - Men's Casual T-Shirt -->
-                    <div class="product-card" data-product="3" data-category="men">
-                        <div class="product-image">
-                            <img src="https://images.unsplash.com/photo-1592878967665-1f8f32b1c4c8?w=400&h=600&fit=crop" alt="Casual T-Shirt">
-                            <div class="category-badge">Men</div>
-                        </div>
-                        <div class="product-info">
-                            <h3 class="product-title">Casual T-Shirt</h3>
-                            <p class="product-description">Soft cotton t-shirt with modern fit design</p>
-                            <p class="product-price">PKR 1,800</p>
-                        </div>
-                    </div>
-
-                    <!-- Women's Products -->
-                    <!-- Product 5 - Women's Summer Dress -->
-                    <div class="product-card" data-product="4" data-category="women">
-                        <div class="product-image">
-                            <img src="https://images.unsplash.com/photo-1566479179817-c62c24b9c2a1?w=400&h=600&fit=crop" alt="Summer Dress">
-                            <div class="category-badge women">Women</div>
-                        </div>
-                        <div class="product-info">
-                            <h3 class="product-title">Summer Dress</h3>
-                            <p class="product-description">Elegant floral dress perfect for summer occasions</p>
-                            <p class="product-price">PKR 5,200</p>
-                        </div>
-                    </div>
-
-                    <!-- Product 6 - Women's Blouse -->
-                    <div class="product-card" data-product="5" data-category="women">
-                        <div class="product-image">
-                            <img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&h=600&fit=crop" alt="Silk Blouse">
-                            <div class="category-badge women">Women</div>
-                        </div>
-                        <div class="product-info">
-                            <h3 class="product-title">Silk Blouse</h3>
-                            <p class="product-description">Luxurious silk blouse with elegant design</p>
-                            <p class="product-price">PKR 6,800</p>
-                        </div>
-                    </div>
-
-                    <!-- Product 7 - Women's Jeans -->
-                    <div class="product-card" data-product="6" data-category="women">
-                        <div class="product-image">
-                            <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&h=600&fit=crop" alt="Women's Jeans">
-                            <div class="category-badge women">Women</div>
-                        </div>
-                        <div class="product-info">
-                            <h3 class="product-title">Designer Jeans</h3>
-                            <p class="product-description">Premium fit jeans with stretch comfort</p>
-                            <p class="product-price">PKR 4,500</p>
-                        </div>
-                    </div>
-
-                    <!-- Product 8 - Women's Cardigan -->
-                    <div class="product-card" data-product="7" data-category="women">
-                        <div class="product-image">
-                            <img src="https://images.unsplash.com/photo-1543076447-215ad9ba6923?w=400&h=600&fit=crop" alt="Cardigan">
-                            <div class="category-badge women">Women</div>
-                        </div>
-                        <div class="product-info">
-                            <h3 class="product-title">Knit Cardigan</h3>
-                            <p class="product-description">Cozy knit cardigan for layered styling</p>
-                            <p class="product-price">PKR 5,500</p>
-                        </div>
-                    </div>
-
-                    <!-- Kids' Products -->
-                    <!-- Product 9 - Kids' Hoodie -->
-                    <div class="product-card" data-product="8" data-category="kids">
-                        <div class="product-image">
-                            <img src="https://images.unsplash.com/photo-1503342217505-b0a15cf70489?w=400&h=600&fit=crop" alt="Kids Hoodie">
-                            <div class="category-badge kids">Kids</div>
-                        </div>
-                        <div class="product-info">
-                            <h3 class="product-title">Kids Hoodie</h3>
-                            <p class="product-description">Comfortable cotton hoodie for active kids</p>
-                            <p class="product-price">PKR 2,800</p>
-                        </div>
-                    </div>
-
-                    <!-- Product 10 - Kids' Pants -->
-                    <div class="product-card" data-product="9" data-category="kids">
-                        <div class="product-image">
-                            <img src="https://images.unsplash.com/photo-1583743814966-8936f37f31c9?w=400&h=600&fit=crop" alt="Kids Pants">
-                            <div class="category-badge kids">Kids</div>
-                        </div>
-                        <div class="product-info">
-                            <h3 class="product-title">Kids Pants</h3>
-                            <p class="product-description">Durable and comfortable everyday pants</p>
-                            <p class="product-price">PKR 2,200</p>
-                        </div>
-                    </div>
-
-                    <!-- Product 11 - Kids' T-Shirt -->
-                    <div class="product-card" data-product="10" data-category="kids">
-                        <div class="product-image">
-                            <img src="https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=400&h=600&fit=crop" alt="Kids T-Shirt">
-                            <div class="category-badge kids">Kids</div>
-                        </div>
-                        <div class="product-info">
-                            <h3 class="product-title">Kids T-Shirt</h3>
-                            <p class="product-description">Fun and colorful t-shirt for playtime</p>
-                            <p class="product-price">PKR 1,500</p>
-                        </div>
-                    </div>
-
-                    <!-- Product 12 - Kids' Jacket -->
-                    <div class="product-card" data-product="11" data-category="kids">
-                        <div class="product-image">
-                            <img src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&h=600&fit=crop" alt="Kids Jacket">
-                            <div class="category-badge kids">Kids</div>
-                        </div>
-                        <div class="product-info">
-                            <h3 class="product-title">Kids Jacket</h3>
-                            <p class="product-description">Warm and protective jacket for all seasons</p>
-                            <p class="product-price">PKR 3,800</p>
+    <!-- Hero Section -->
+    <section class="hero-section bg-light py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="display-4 fw-bold mb-3">Zarva - Modern Clothing</h1>
+                    <p class="lead text-muted mb-4">Quality fashion for every occasion</p>
+                    <div class="info-cards">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="info-card p-3 mb-3">
+                                    <i class="fas fa-truck text-success mb-2"></i>
+                                    <h6>Free Delivery</h6>
+                                    <small>On orders above PKR 3,000</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="info-card p-3 mb-3">
+                                    <i class="fas fa-undo text-info mb-2"></i>
+                                    <h6>7-Day Returns</h6>
+                                    <small>Easy return policy</small>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </main>
-    </div>
-
-    <!-- Product Modal -->
-    <div id="productModal" class="modal-overlay" style="display: none;">
-        <div class="modal-container">
-            <button class="modal-close" id="modalClose">&times;</button>
-            <div class="modal-content">
-                <div class="modal-image">
-                    <img id="modalProductImage" src="" alt="">
-                </div>
-                <div class="modal-details">
-                    <h3 id="modalProductTitle" class="modal-title"></h3>
-                    <p id="modalProductDescription" class="modal-description"></p>
-                    
-                    <div class="sizes-section">
-                        <h4 class="sizes-title">Available Sizes</h4>
-                        <div class="sizes-list">
-                            <button class="size-pill" data-size="S">S</button>
-                            <button class="size-pill" data-size="M">M</button>
-                            <button class="size-pill" data-size="L">L</button>
-                            <button class="size-pill" data-size="XL">XL</button>
-                        </div>
+                <div class="col-lg-6">
+                    <div class="hero-image text-center">
+                        <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Modern Fashion Store" class="img-fluid rounded shadow">
                     </div>
-                    
-                    <p id="modalProductPrice" class="modal-price"></p>
-                    
-                    <button id="placeOrderBtn" class="place-order-btn">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2Z" stroke="currentColor" stroke-width="2" fill="#10B981"/>
-                            <path d="M8.5 12.5L11 15L16 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        Place Order
-                    </button>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <!-- Category Filter Buttons -->
+    <section class="filter-section py-3 bg-white">
+        <div class="container">
+            <div class="d-flex justify-content-center flex-wrap gap-2">
+                <button class="btn btn-outline-primary active" onclick="filterProducts('all'); return false;">
+                    <i class="fas fa-th me-1"></i>All Products
+                </button>
+                <button class="btn btn-outline-primary" onclick="filterProducts('men'); return false;">
+                    <i class="fas fa-male me-1"></i>Men
+                </button>
+                <button class="btn btn-outline-primary" onclick="filterProducts('women'); return false;">
+                    <i class="fas fa-female me-1"></i>Women
+                </button>
+                <button class="btn btn-outline-primary" onclick="filterProducts('kids'); return false;">
+                    <i class="fas fa-child me-1"></i>Kids
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products-section py-5">
+        <div class="container">
+            <div class="row" id="productsContainer">
+                <!-- Men's Products -->
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4 product-card" data-category="men">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Classic White Shirt">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">Classic White Shirt</h5>
+                            <p class="card-text text-muted small">Premium cotton formal shirt for office wear</p>
+                            <div class="mt-auto">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="fw-bold text-primary fs-5">PKR 2,500</span>
+                                </div>
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <select class="form-select form-select-sm" id="size-men-1">
+                                            <option value="S">Size S</option>
+                                            <option value="M" selected>Size M</option>
+                                            <option value="L">Size L</option>
+                                            <option value="XL">Size XL</option>
+                                            <option value="XXL">Size XXL</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <select class="form-select form-select-sm" id="qty-men-1">
+                                            <option value="1" selected>Qty 1</option>
+                                            <option value="2">Qty 2</option>
+                                            <option value="3">Qty 3</option>
+                                            <option value="4">Qty 4</option>
+                                            <option value="5">Qty 5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-success btn-sm" onclick="addToCart('men-1', 'Classic White Shirt', 2500); return false;">
+                                        <i class="fas fa-plus me-1"></i>Add to Cart
+                                    </button>
+                                    <button class="btn btn-outline-success btn-sm" onclick="orderSingleOnWhatsApp('Classic White Shirt', 2500, 'men-1'); return false;">
+                                        <i class="fab fa-whatsapp me-1"></i>Buy Now
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4 product-card" data-category="men">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1544966503-7cc5ac882d5a?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Denim Jacket">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">Denim Jacket</h5>
+                            <p class="card-text text-muted small">Classic denim jacket for casual outings</p>
+                            <div class="mt-auto">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="fw-bold text-primary fs-5">PKR 4,200</span>
+                                </div>
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <select class="form-select form-select-sm" id="size-men-2">
+                                            <option value="S">Size S</option>
+                                            <option value="M" selected>Size M</option>
+                                            <option value="L">Size L</option>
+                                            <option value="XL">Size XL</option>
+                                            <option value="XXL">Size XXL</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <select class="form-select form-select-sm" id="qty-men-2">
+                                            <option value="1" selected>Qty 1</option>
+                                            <option value="2">Qty 2</option>
+                                            <option value="3">Qty 3</option>
+                                            <option value="4">Qty 4</option>
+                                            <option value="5">Qty 5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-success btn-sm" onclick="addToCart('men-2', 'Denim Jacket', 4200); return false;">
+                                        <i class="fas fa-plus me-1"></i>Add to Cart
+                                    </button>
+                                    <button class="btn btn-outline-success btn-sm" onclick="orderSingleOnWhatsApp('Denim Jacket', 4200, 'men-2'); return false;">
+                                        <i class="fab fa-whatsapp me-1"></i>Buy Now
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4 product-card" data-category="men">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Black Trousers">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">Black Trousers</h5>
+                            <p class="card-text text-muted small">Formal black trousers for office wear</p>
+                            <div class="mt-auto">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="fw-bold text-primary fs-5">PKR 3,800</span>
+                                </div>
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <select class="form-select form-select-sm" id="size-men-3">
+                                            <option value="S">Size S</option>
+                                            <option value="M" selected>Size M</option>
+                                            <option value="L">Size L</option>
+                                            <option value="XL">Size XL</option>
+                                            <option value="XXL">Size XXL</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <select class="form-select form-select-sm" id="qty-men-3">
+                                            <option value="1" selected>Qty 1</option>
+                                            <option value="2">Qty 2</option>
+                                            <option value="3">Qty 3</option>
+                                            <option value="4">Qty 4</option>
+                                            <option value="5">Qty 5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-success btn-sm" onclick="addToCart('men-3', 'Black Trousers', 3800); return false;">
+                                        <i class="fas fa-plus me-1"></i>Add to Cart
+                                    </button>
+                                    <button class="btn btn-outline-success btn-sm" onclick="orderSingleOnWhatsApp('Black Trousers', 3800, 'men-3'); return false;">
+                                        <i class="fab fa-whatsapp me-1"></i>Buy Now
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4 product-card" data-category="men">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Casual T-Shirt">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">Casual T-Shirt</h5>
+                            <p class="card-text text-muted small">Comfortable cotton t-shirt for daily wear</p>
+                            <div class="mt-auto">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="fw-bold text-primary fs-5">PKR 1,800</span>
+                                </div>
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <select class="form-select form-select-sm" id="size-men-4">
+                                            <option value="S">Size S</option>
+                                            <option value="M" selected>Size M</option>
+                                            <option value="L">Size L</option>
+                                            <option value="XL">Size XL</option>
+                                            <option value="XXL">Size XXL</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <select class="form-select form-select-sm" id="qty-men-4">
+                                            <option value="1" selected>Qty 1</option>
+                                            <option value="2">Qty 2</option>
+                                            <option value="3">Qty 3</option>
+                                            <option value="4">Qty 4</option>
+                                            <option value="5">Qty 5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-success btn-sm" onclick="addToCart('men-4', 'Casual T-Shirt', 1800); return false;">
+                                        <i class="fas fa-plus me-1"></i>Add to Cart
+                                    </button>
+                                    <button class="btn btn-outline-success btn-sm" onclick="orderSingleOnWhatsApp('Casual T-Shirt', 1800, 'men-4'); return false;">
+                                        <i class="fab fa-whatsapp me-1"></i>Buy Now
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Women's Products -->
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4 product-card" data-category="women">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Summer Dress">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">Summer Dress</h5>
+                            <p class="card-text text-muted small">Elegant summer dress for special occasions</p>
+                            <div class="mt-auto">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="fw-bold text-primary fs-5">PKR 5,200</span>
+                                </div>
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <select class="form-select form-select-sm" id="size-women-1">
+                                            <option value="S" selected>Size S</option>
+                                            <option value="M">Size M</option>
+                                            <option value="L">Size L</option>
+                                            <option value="XL">Size XL</option>
+                                            <option value="XXL">Size XXL</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <select class="form-select form-select-sm" id="qty-women-1">
+                                            <option value="1" selected>Qty 1</option>
+                                            <option value="2">Qty 2</option>
+                                            <option value="3">Qty 3</option>
+                                            <option value="4">Qty 4</option>
+                                            <option value="5">Qty 5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-success btn-sm" onclick="addToCart('women-1', 'Summer Dress', 5200); return false;">
+                                        <i class="fas fa-plus me-1"></i>Add to Cart
+                                    </button>
+                                    <button class="btn btn-outline-success btn-sm" onclick="orderSingleOnWhatsApp('Summer Dress', 5200, 'women-1'); return false;">
+                                        <i class="fab fa-whatsapp me-1"></i>Buy Now
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4 product-card" data-category="women">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Silk Blouse">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">Silk Blouse</h5>
+                            <p class="card-text text-muted small">Premium silk blouse for formal occasions</p>
+                            <div class="mt-auto">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="fw-bold text-primary fs-5">PKR 6,800</span>
+                                </div>
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <select class="form-select form-select-sm" id="size-women-2">
+                                            <option value="S" selected>Size S</option>
+                                            <option value="M">Size M</option>
+                                            <option value="L">Size L</option>
+                                            <option value="XL">Size XL</option>
+                                            <option value="XXL">Size XXL</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <select class="form-select form-select-sm" id="qty-women-2">
+                                            <option value="1" selected>Qty 1</option>
+                                            <option value="2">Qty 2</option>
+                                            <option value="3">Qty 3</option>
+                                            <option value="4">Qty 4</option>
+                                            <option value="5">Qty 5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-success btn-sm" onclick="addToCart('women-2', 'Silk Blouse', 6800); return false;">
+                                        <i class="fas fa-plus me-1"></i>Add to Cart
+                                    </button>
+                                    <button class="btn btn-outline-success btn-sm" onclick="orderSingleOnWhatsApp('Silk Blouse', 6800, 'women-2'); return false;">
+                                        <i class="fab fa-whatsapp me-1"></i>Buy Now
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4 product-card" data-category="women">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Designer Jeans">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">Designer Jeans</h5>
+                            <p class="card-text text-muted small">Stylish designer jeans for casual wear</p>
+                            <div class="mt-auto">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="fw-bold text-primary fs-5">PKR 4,500</span>
+                                </div>
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <select class="form-select form-select-sm" id="size-women-3">
+                                            <option value="S" selected>Size S</option>
+                                            <option value="M">Size M</option>
+                                            <option value="L">Size L</option>
+                                            <option value="XL">Size XL</option>
+                                            <option value="XXL">Size XXL</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <select class="form-select form-select-sm" id="qty-women-3">
+                                            <option value="1" selected>Qty 1</option>
+                                            <option value="2">Qty 2</option>
+                                            <option value="3">Qty 3</option>
+                                            <option value="4">Qty 4</option>
+                                            <option value="5">Qty 5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-success btn-sm" onclick="addToCart('women-3', 'Designer Jeans', 4500); return false;">
+                                        <i class="fas fa-plus me-1"></i>Add to Cart
+                                    </button>
+                                    <button class="btn btn-outline-success btn-sm" onclick="orderSingleOnWhatsApp('Designer Jeans', 4500, 'women-3'); return false;">
+                                        <i class="fab fa-whatsapp me-1"></i>Buy Now
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4 product-card" data-category="women">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1434389677669-e08b4cac3105?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Knit Cardigan">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">Knit Cardigan</h5>
+                            <p class="card-text text-muted small">Comfortable knit cardigan for layering</p>
+                            <div class="mt-auto">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="fw-bold text-primary fs-5">PKR 5,500</span>
+                                </div>
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <select class="form-select form-select-sm" id="size-women-4">
+                                            <option value="S" selected>Size S</option>
+                                            <option value="M">Size M</option>
+                                            <option value="L">Size L</option>
+                                            <option value="XL">Size XL</option>
+                                            <option value="XXL">Size XXL</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <select class="form-select form-select-sm" id="qty-women-4">
+                                            <option value="1" selected>Qty 1</option>
+                                            <option value="2">Qty 2</option>
+                                            <option value="3">Qty 3</option>
+                                            <option value="4">Qty 4</option>
+                                            <option value="5">Qty 5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-success btn-sm" onclick="addToCart('women-4', 'Knit Cardigan', 5500); return false;">
+                                        <i class="fas fa-plus me-1"></i>Add to Cart
+                                    </button>
+                                    <button class="btn btn-outline-success btn-sm" onclick="orderSingleOnWhatsApp('Knit Cardigan', 5500, 'women-4'); return false;">
+                                        <i class="fab fa-whatsapp me-1"></i>Buy Now
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kids' Products -->
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4 product-card" data-category="kids">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1503341960582-b45751874cf0?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Kids Hoodie">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">Kids Hoodie</h5>
+                            <p class="card-text text-muted small">Comfortable hoodie for active kids</p>
+                            <div class="mt-auto">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="fw-bold text-primary fs-5">PKR 2,800</span>
+                                </div>
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <select class="form-select form-select-sm" id="size-kids-1">
+                                            <option value="2-3">Age 2-3</option>
+                                            <option value="4-5" selected>Age 4-5</option>
+                                            <option value="6-7">Age 6-7</option>
+                                            <option value="8-9">Age 8-9</option>
+                                            <option value="10-11">Age 10-11</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <select class="form-select form-select-sm" id="qty-kids-1">
+                                            <option value="1" selected>Qty 1</option>
+                                            <option value="2">Qty 2</option>
+                                            <option value="3">Qty 3</option>
+                                            <option value="4">Qty 4</option>
+                                            <option value="5">Qty 5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-success btn-sm" onclick="addToCart('kids-1', 'Kids Hoodie', 2800); return false;">
+                                        <i class="fas fa-plus me-1"></i>Add to Cart
+                                    </button>
+                                    <button class="btn btn-outline-success btn-sm" onclick="orderSingleOnWhatsApp('Kids Hoodie', 2800, 'kids-1'); return false;">
+                                        <i class="fab fa-whatsapp me-1"></i>Buy Now
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4 product-card" data-category="kids">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Kids Pants">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">Kids Pants</h5>
+                            <p class="card-text text-muted small">Durable pants for everyday wear</p>
+                            <div class="mt-auto">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="fw-bold text-primary fs-5">PKR 2,200</span>
+                                </div>
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <select class="form-select form-select-sm" id="size-kids-2">
+                                            <option value="2-3">Age 2-3</option>
+                                            <option value="4-5" selected>Age 4-5</option>
+                                            <option value="6-7">Age 6-7</option>
+                                            <option value="8-9">Age 8-9</option>
+                                            <option value="10-11">Age 10-11</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <select class="form-select form-select-sm" id="qty-kids-2">
+                                            <option value="1" selected>Qty 1</option>
+                                            <option value="2">Qty 2</option>
+                                            <option value="3">Qty 3</option>
+                                            <option value="4">Qty 4</option>
+                                            <option value="5">Qty 5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-success btn-sm" onclick="addToCart('kids-2', 'Kids Pants', 2200); return false;">
+                                        <i class="fas fa-plus me-1"></i>Add to Cart
+                                    </button>
+                                    <button class="btn btn-outline-success btn-sm" onclick="orderSingleOnWhatsApp('Kids Pants', 2200, 'kids-2'); return false;">
+                                        <i class="fab fa-whatsapp me-1"></i>Buy Now
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4 product-card" data-category="kids">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Kids T-Shirt">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">Kids T-Shirt</h5>
+                            <p class="card-text text-muted small">Colorful t-shirt for playful kids</p>
+                            <div class="mt-auto">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="fw-bold text-primary fs-5">PKR 1,500</span>
+                                </div>
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <select class="form-select form-select-sm" id="size-kids-3">
+                                            <option value="2-3">Age 2-3</option>
+                                            <option value="4-5" selected>Age 4-5</option>
+                                            <option value="6-7">Age 6-7</option>
+                                            <option value="8-9">Age 8-9</option>
+                                            <option value="10-11">Age 10-11</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <select class="form-select form-select-sm" id="qty-kids-3">
+                                            <option value="1" selected>Qty 1</option>
+                                            <option value="2">Qty 2</option>
+                                            <option value="3">Qty 3</option>
+                                            <option value="4">Qty 4</option>
+                                            <option value="5">Qty 5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-success btn-sm" onclick="addToCart('kids-3', 'Kids T-Shirt', 1500); return false;">
+                                        <i class="fas fa-plus me-1"></i>Add to Cart
+                                    </button>
+                                    <button class="btn btn-outline-success btn-sm" onclick="orderSingleOnWhatsApp('Kids T-Shirt', 1500, 'kids-3'); return false;">
+                                        <i class="fab fa-whatsapp me-1"></i>Buy Now
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4 product-card" data-category="kids">
+                    <div class="card h-100 shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1544966503-7cc5ac882d5a?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Kids Jacket">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">Kids Jacket</h5>
+                            <p class="card-text text-muted small">Stylish jacket for cool weather</p>
+                            <div class="mt-auto">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="fw-bold text-primary fs-5">PKR 3,800</span>
+                                </div>
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <select class="form-select form-select-sm" id="size-kids-4">
+                                            <option value="2-3">Age 2-3</option>
+                                            <option value="4-5" selected>Age 4-5</option>
+                                            <option value="6-7">Age 6-7</option>
+                                            <option value="8-9">Age 8-9</option>
+                                            <option value="10-11">Age 10-11</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <select class="form-select form-select-sm" id="qty-kids-4">
+                                            <option value="1" selected>Qty 1</option>
+                                            <option value="2">Qty 2</option>
+                                            <option value="3">Qty 3</option>
+                                            <option value="4">Qty 4</option>
+                                            <option value="5">Qty 5</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-success btn-sm" onclick="addToCart('kids-4', 'Kids Jacket', 3800); return false;">
+                                        <i class="fas fa-plus me-1"></i>Add to Cart
+                                    </button>
+                                    <button class="btn btn-outline-success btn-sm" onclick="orderSingleOnWhatsApp('Kids Jacket', 3800, 'kids-4'); return false;">
+                                        <i class="fab fa-whatsapp me-1"></i>Buy Now
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Footer -->
-    <footer class="site-footer">
+    <footer class="bg-dark text-white py-5">
         <div class="container">
-            <div class="footer-content">
-                <!-- Logo and Brand -->
-                <div class="footer-section footer-brand">
-                    <div class="footer-logo">
-                        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="20" cy="20" r="20" fill="#087F8C"/>
-                            <path d="M12 15L20 12L28 15V25C28 26.1046 27.1046 27 26 27H14C12.8954 27 12 26.1046 12 25V15Z" stroke="white" stroke-width="2" fill="none"/>
-                            <path d="M16 20L19 23L24 18" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <h3 class="brand-name">Modern Clothing</h3>
-                    <p class="brand-description">Quality fashion for every occasion</p>
-                </div>
-
-                <!-- Contact Information -->
-                <div class="footer-section footer-contact">
-                    <h4 class="footer-heading">Contact Us</h4>
-                    <div class="contact-item">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" stroke-width="2"/>
-                            <polyline points="22,6 12,13 2,6" stroke="currentColor" stroke-width="2"/>
-                        </svg>
-                        <span><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="dcb5b2bab39cb1b3b8b9aeb2bfb0b3a8b4b5b2bbf2acb7">[email&#160;protected]</a></span>
-                    </div>
-                    <div class="contact-item">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M22 16.92V19.92C22.0011 20.1985 21.9441 20.4742 21.8325 20.7293C21.7209 20.9845 21.5573 21.2136 21.3521 21.4019C21.1468 21.5901 20.9046 21.7335 20.6407 21.8227C20.3769 21.9119 20.0974 21.9451 19.82 21.92C16.7428 21.5856 13.787 20.5341 11.19 18.85C8.77382 17.3147 6.72533 15.2662 5.18999 12.85C3.49997 10.2412 2.44848 7.27097 2.11999 4.18001C2.095 3.90347 2.12787 3.62476 2.21649 3.36162C2.30512 3.09849 2.44756 2.85669 2.63476 2.65162C2.82196 2.44655 3.0498 2.28271 3.30379 2.17052C3.55777 2.05833 3.83233 2.00026 4.10999 2.00001H7.10999C7.59574 1.99522 8.06579 2.16708 8.43376 2.48353C8.80173 2.79999 9.04262 3.23945 9.10999 3.72001C9.23662 4.68007 9.47145 5.62273 9.80999 6.53001C9.94455 6.88792 9.97366 7.27691 9.89399 7.65088C9.81431 8.02485 9.62886 8.36811 9.35999 8.65001L8.10999 9.90001C9.51356 12.4135 11.5865 14.4864 14.1 15.89L15.35 14.64C15.6319 14.3711 15.9751 14.1857 16.3491 14.106C16.7231 14.0263 17.1121 14.0555 17.47 14.19C18.3773 14.5285 19.3199 14.7634 20.28 14.89C20.7658 14.9581 21.2094 15.2032 21.5265 15.5775C21.8437 15.9518 22.0122 16.4296 22 16.92Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        <span>+92 300 123 4567</span>
-                    </div>
-                    <div class="contact-item">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M17.657 16.657L13.414 20.9C12.778 21.536 11.822 21.863 10.871 21.863C9.92002 21.863 8.96402 21.536 8.32802 20.9L4.09202 16.664C3.38969 15.9613 2.88961 15.0923 2.64432 14.1491C2.39903 13.2059 2.41671 12.2131 2.69402 11.27C2.99202 10.257 3.64602 9.37396 4.55002 8.71996C5.49302 8.03196 6.64402 7.72196 7.83302 7.83696C9.07102 7.95996 10.226 8.43796 11.127 9.17596C11.2779 9.29157 11.4507 9.37675 11.634 9.42596C11.8173 9.47516 12.0067 9.4868 12.189 9.46016C12.3713 9.43351 12.543 9.36933 12.6938 9.27197C12.8446 9.17461 12.9708 9.04637 13.064 8.89596L14.314 7.64596C14.944 7.01596 15.901 7.14896 16.383 7.89996L18.127 10.644C18.61 11.395 18.477 12.352 17.847 12.982C16.9093 13.9197 15.7806 14.6183 14.5396 15.0275C13.2987 15.4367 11.9737 15.5455 10.669 15.345C9.36423 15.1446 8.11436 14.7383 7.00603 14.1553C5.89771 13.5723 4.95747 12.8261 4.24402 11.962C3.53058 11.0979 3.06313 10.1046 2.87002 9.05296C2.6769 8.00133 2.76308 6.91832 3.12002 5.89196C3.79102 3.95596 5.13402 2.61296 7.07002 1.94196C8.09637 1.58489 9.17931 1.49858 10.2309 1.69157C11.2825 1.88455 12.2758 2.35189 13.1399 3.06533C14.0039 3.77878 14.7501 4.71902 15.3331 5.82735C15.9161 6.93567 16.3223 8.18553 16.5227 9.49032C16.7231 10.7951 16.6143 12.1201 16.205 13.361C15.7958 14.6019 15.0972 15.7306 14.1595 16.6683C13.2218 17.606 12.0929 18.3045 10.852 18.7137C9.61114 19.1229 8.28611 19.2316 6.98132 19.0312C5.67653 18.8308 4.42668 18.4246 3.31835 17.8416C2.21003 17.2586 1.26979 16.5124 0.556338 15.648C0.165672 15.169 0.0126948 14.5831 0.125022 14.0069C0.23735 13.4307 0.608022 12.9069 1.17102 12.536L2.71502 10.992C4.15602 9.55196 6.09102 8.85696 8.12502 9.03396C10.159 9.21096 11.959 10.225 13.127 11.848C14.295 13.471 14.725 15.554 14.34 17.567C13.955 19.58 12.775 21.358 10.984 22.55C9.19298 23.742 7.01498 24.263 4.92902 23.989C-2.07102 22.989 -7.97098 19.339 -10.93 14.5C-8.00098 18.92 -3.00098 22.24 3.99902 23.5L6.99902 24C12 24 15 21 15 16C15 13 13.5 10.5 10.5 8.5C7.5 6.5 5 5 5 1.00002C5 -2.99998 8 -5.99998 13 -5.99998C18 -5.99998 21 -2.99998 21 2.00002C21 7.00002 18 10 13 10C8 10 5 7.00002 5 2.00002" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        <span>123 Fashion Street, Karachi</span>
-                    </div>
-                </div>
-
-                <!-- Social Links -->
-                <div class="footer-section footer-social">
-                    <h4 class="footer-heading">Follow Us</h4>
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h5 class="fw-bold mb-3">
+                        <i class="fas fa-store me-2"></i>Zarva
+                    </h5>
+                    <p class="text-light mb-3">Modern clothing for every occasion. Quality fashion at your fingertips.</p>
                     <div class="social-links">
-                        <a href="#" class="social-link" aria-label="Facebook">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M18 2H15C13.6739 2 12.4021 2.52678 11.4645 3.46447C10.5268 4.40215 10 5.67392 10 7V10H7V14H10V22H14V14H17L18 10H14V7C14 6.73478 14.1054 6.48043 14.2929 6.29289C14.4804 6.10536 14.7348 6 15 6H18V2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
+                        <a href="https://instagram.com/zarva_official" target="_blank" class="text-light me-3">
+                            <i class="fab fa-instagram fa-lg"></i>
                         </a>
-                        <a href="#" class="social-link" aria-label="Instagram">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" stroke="currentColor" stroke-width="2"/>
-                                <path d="M16 11.37C16.24 10.56 16.09 9.61 15.55 8.85C15.01 8.09 14.18 7.64 13.25 7.56C12.32 7.48 11.41 7.69 10.66 8.15C9.91 8.61 9.39 9.28 9.19 10.04C8.99 10.8 9.05 11.61 9.36 12.33C9.67 13.05 10.21 13.64 10.91 14.01C11.61 14.38 12.42 14.49 13.19 14.31C13.96 14.13 14.64 13.68 15.1 13.05C15.56 12.42 15.76 11.66 15.68 10.91" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
+                        <a href="https://facebook.com/zarvaofficial" target="_blank" class="text-light me-3">
+                            <i class="fab fa-facebook fa-lg"></i>
                         </a>
-                        <a href="#" class="social-link" aria-label="Twitter">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M23 3C22.0424 3.67548 20.9821 4.19211 19.86 4.53C19.2577 3.83751 18.4573 3.34669 17.567 3.12393C16.6767 2.90116 15.7395 2.95718 14.8821 3.28445C14.0247 3.61171 13.2884 4.19439 12.773 4.95372C12.2575 5.71305 11.9877 6.61553 12 7.53V8.53C10.2426 8.57557 8.50127 8.18581 6.93101 7.39624C5.36074 6.60667 4.01032 5.43666 3 4C3 4 -1 13 8 17C5.94053 18.398 3.48716 19.099 1 19C10 24 21 19 21 7.5C20.9991 7.22145 20.9723 6.94359 20.92 6.67C21.9406 5.66349 22.6608 4.39271 23 3V3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
+                        <a href="https://wa.me/923001234567" target="_blank" class="text-light">
+                            <i class="fab fa-whatsapp fa-lg"></i>
                         </a>
-                        <a href="#" class="social-link" aria-label="WhatsApp">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M17.472 14.382C17.033 14.248 16.525 14.248 16.086 14.382L14.151 15.317C13.781 15.527 13.364 15.648 12.931 15.648C12.498 15.648 12.081 15.527 11.711 15.317L9.776 14.382C9.337 14.248 8.829 14.248 8.390 14.382L6.455 15.317C6.085 15.527 5.668 15.648 5.235 15.648C4.802 15.648 4.385 15.527 4.015 15.317L2.080 14.382C1.641 14.248 1.133 14.248 0.694 14.382L2.629 15.317C2.999 15.527 3.416 15.648 3.849 15.648C4.282 15.648 4.699 15.527 5.069 15.317L7.004 14.382C7.443 14.248 7.951 14.248 8.390 14.382L10.325 15.317C10.695 15.527 11.112 15.648 11.545 15.648C11.978 15.648 12.395 15.527 12.765 15.317L14.700 14.382C15.139 14.248 15.647 14.248 16.086 14.382L17.472 14.382Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M20.407 18.969C19.468 18.969 18.528 18.969 17.589 18.969C13.932 18.969 10.266 17.289 7.253 14.276C4.240 11.264 2.560 7.598 2.560 3.941C2.560 2.532 2.880 1.173 3.472 0.00976562H0.240001V2.011C0.240001 5.328 1.840 8.487 4.880 10.727C7.920 12.967 12.150 14.247 16.240 13.968V16.688C16.240 17.787 16.640 18.747 17.280 19.467C17.920 20.187 18.800 20.687 19.920 20.847L20.407 18.969Z" fill="currentColor"/>
-                            </svg>
-                        </a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 mb-4">
+                    <h6 class="fw-bold mb-3">How to Order</h6>
+                    <ol class="text-light small">
+                        <li>Browse our products and select your items</li>
+                        <li>Choose your size and quantity</li>
+                        <li>Add products to cart or buy individually</li>
+                        <li>Review your cart and place order</li>
+                        <li>Confirm your order in WhatsApp chat</li>
+                    </ol>
+                </div>
+                
+                <div class="col-lg-4 mb-4">
+                    <h6 class="fw-bold mb-3">Contact Information</h6>
+                    <div class="contact-info">
+                        <p class="text-light mb-2">
+                            <i class="fab fa-whatsapp me-2"></i>
+                            <a href="https://wa.me/923001234567" class="text-light">+92 300 1234567</a>
+                        </p>
+                        <p class="text-light mb-2">
+                            <i class="fas fa-envelope me-2"></i>
+                            <a href="/cdn-cgi/l/email-protection#167f787079566c776460773875797b" class="text-light"><span class="__cf_email__" data-cfemail="e881868e87a892899a9e89c68b8785">[email&#160;protected]</span></a>
+                        </p>
+                        <p class="text-light mb-2">
+                            <i class="fab fa-instagram me-2"></i>
+                            <a href="https://instagram.com/zarva_official" class="text-light">@zarva_official</a>
+                        </p>
+                        <p class="text-light mb-2">
+                            <i class="fas fa-clock me-2"></i>Business Hours: 9 AM - 9 PM
+                        </p>
                     </div>
                 </div>
             </div>
-
-            <!-- Copyright -->
-            <div class="footer-bottom">
-                <div class="footer-divider"></div>
-                <div class="footer-copyright">
-                    <p>&copy; 2025 Modern Clothing. All rights reserved. | Crafted with excellence in Pakistan</p>
+            
+            <hr class="my-4">
+            
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="text-light mb-0">&copy; 2025 Zarva. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="text-light mb-0 small">Cash on Delivery | 7-Day Returns | Free Delivery on orders above PKR 3,000</p>
                 </div>
             </div>
         </div>
     </footer>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="script.js"></script>
+    <!-- Floating WhatsApp Button -->
+    <div class="floating-whatsapp">
+        <a href="https://wa.me/923001234567?text=Hello%20Zarva%2C%20I%27m%20interested%20in%20your%20products" 
+           target="_blank" 
+           class="btn-floating-whatsapp"
+           title="Chat with us on WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+        </a>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
