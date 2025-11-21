@@ -402,15 +402,13 @@ function initializeWebsite() {
             }
         });
     }
-    
-    // Add scroll effect to navbar
+
     let lastScrollTop = 0;
     const navbar = document.querySelector('.navbar');
     
     window.addEventListener('scroll', function() {
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         
-        // Add/remove shadow on scroll
         if (scrollTop > 10) {
             navbar.style.boxShadow = '0 2px 20px rgba(0,0,0,0.1)';
         } else {
