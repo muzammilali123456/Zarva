@@ -372,10 +372,10 @@ function initializeWebsite() {
     
     updateCartDisplay();
     
-    // Set initial filter - show all products
+    
     filterProducts('all');
     
-    // Initialize mobile menu
+    
     const navbarToggler = document.querySelector('.navbar-toggler');
     const navbarCollapse = document.querySelector('.navbar-collapse');
     
@@ -383,8 +383,7 @@ function initializeWebsite() {
         navbarToggler.addEventListener('click', function() {
             navbarCollapse.classList.toggle('show');
         });
-        
-        // Close mobile menu when clicking outside
+       
         document.addEventListener('click', function(e) {
             if (!navbarToggler.contains(e.target) && !navbarCollapse.contains(e.target)) {
                 navbarCollapse.classList.remove('show');
@@ -410,13 +409,10 @@ function initializeWebsite() {
     console.log('✅ Zarva website initialization completed!');
 }
 
-// =======================
-// GLOBAL EVENT LISTENERS
-// =======================
 
-// Handle window resize
+
 window.addEventListener('resize', function() {
-    // Close mobile menu on resize to desktop
+    
     if (window.innerWidth > 768) {
         const navbarCollapse = document.querySelector('.navbar-collapse');
         if (navbarCollapse) {
@@ -425,7 +421,7 @@ window.addEventListener('resize', function() {
     }
 });
 
-// Handle network status
+
 window.addEventListener('offline', function() {
     showNotification('You are offline. Some features may not work properly.', 'warning');
 });
@@ -434,11 +430,8 @@ window.addEventListener('online', function() {
     showNotification('Connection restored!', 'success');
 });
 
-// =======================
-// GLOBAL FUNCTION EXPORTS
-// =======================
 
-// Make all functions globally accessible
+
 window.filterProducts = filterProducts;
 window.addToCart = addToCart;
 window.removeFromCart = removeFromCart;
@@ -449,9 +442,7 @@ window.toggleCart = toggleCart;
 window.saveCity = saveCity;
 window.showNotification = showNotification;
 
-// =======================
-// DOM READY INITIALIZATION
-// =======================
+
 
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initializeWebsite);
@@ -459,7 +450,6 @@ if (document.readyState === 'loading') {
     initializeWebsite();
 }
 
-// Show welcome message
 setTimeout(() => {
     showNotification('Welcome to Zarva! Browse products, add to cart, and order via WhatsApp.', 'success');
 }, 2000);
