@@ -219,21 +219,19 @@ function updateCartDisplay() {
     const bulkOrderBtn = document.getElementById('bulkOrderBtn');
     const emptyCart = document.getElementById('emptyCart');
     
-    // Update cart count
+    
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     if (cartCount) cartCount.textContent = totalItems;
     
-    // Update totals
+    
     const totalPrice = cart.reduce((sum, item) => sum + item.totalPrice, 0);
     if (cartTotalItems) cartTotalItems.textContent = cart.length;
     if (cartTotalPrice) cartTotalPrice.textContent = `PKR ${totalPrice.toLocaleString()}`;
     
-    // Enable/disable bulk order button
     if (bulkOrderBtn) {
         bulkOrderBtn.disabled = cart.length === 0;
     }
-    
-    // Update cart items list
+  
     if (cartItemsContainer) {
         if (cart.length === 0) {
             cartItemsContainer.innerHTML = `
@@ -284,9 +282,7 @@ function updateCartDisplay() {
     }
 }
 
-// =======================
-// CART SIDEBAR TOGGLE
-// =======================
+
 
 function toggleCart() {
     const cartSidebar = document.getElementById('cartSidebar');
@@ -312,9 +308,7 @@ function toggleCart() {
     }
 }
 
-// =======================
-// CITY SELECTOR
-// =======================
+
 
 function saveCity() {
     const citySelector = document.getElementById('citySelector');
@@ -328,18 +322,15 @@ function saveCity() {
     }
 }
 
-// =======================
-// UTILITY FUNCTIONS
-// =======================
+
 
 function showNotification(message, type = 'info') {
     console.log('🔔 Notification:', message, type);
     
-    // Remove existing notifications
+    
     const existingNotifications = document.querySelectorAll('.notification');
     existingNotifications.forEach(notification => notification.remove());
-    
-    // Create notification element
+  
     const notification = document.createElement('div');
     notification.className = `notification alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show`;
     notification.style.cssText = `
@@ -358,7 +349,7 @@ function showNotification(message, type = 'info') {
     
     document.body.appendChild(notification);
     
-    // Auto remove after 5 seconds
+    
     setTimeout(() => {
         if (notification.parentNode) {
             notification.remove();
@@ -366,21 +357,19 @@ function showNotification(message, type = 'info') {
     }, 5000);
 }
 
-// =======================
-// INITIALIZATION
-// =======================
+
 
 function initializeWebsite() {
     console.log('🚀 Initializing Zarva website...');
     
-    // Load saved city
+    
     const savedCity = localStorage.getItem('zarva_selected_city');
     const citySelector = document.getElementById('citySelector');
     if (citySelector && savedCity) {
         citySelector.value = savedCity;
     }
     
-    // Initialize cart display
+    
     updateCartDisplay();
     
     // Set initial filter - show all products
